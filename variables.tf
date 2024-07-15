@@ -129,3 +129,9 @@ variable "network_route_gateway" {
     error_message = "Gateway cannot be `172.31.1.1` as this IP is being used as a gateway for the public network interface of servers."
   }
 }
+
+variable "network_routes" {
+  description = "A map between route_destinations to route_gateways."
+  type = map(any)
+  default = {}
+}
