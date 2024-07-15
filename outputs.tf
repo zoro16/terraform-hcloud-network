@@ -42,7 +42,7 @@ output "network_expose_routes_to_vswitch" {
 
 output "subnet_id" {
   description = "ID of the Network subnet."
-  value       = toset([
+  value = toset([
     for v in hcloud_network_subnet.subnet : v.id
   ])
 }
@@ -69,10 +69,10 @@ output "subnet_network_zone" {
 
 output "subnet_vswitch_id" {
   description = "ID of the vswitch, Required if type is `vswitch`"
-  value       = try(
+  value = try(
     join(",", toset([for v in hcloud_network_subnet.subnet : v.vswitch_id])),
     ""
-    )
+  )
 
   precondition {
     condition     = (var.subnet_type == "vswitch" && var.subnet_vswitch_id == null) ? false : true

@@ -3,6 +3,12 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
+locals {
+  network_routes = tomap({
+    "0.0.0.0/0" = "10.100.0.2"
+  })
+}
+
 module "net" {
   source = "../../"
 
@@ -17,9 +23,11 @@ module "net" {
     environment = "dev"
   }
 
-  create_subnet        = true
-  subnet_network_id    = module.net.network_id
-  subnet_type          = "cloud"
-  subnet_network_zone  = "eu-central"
-  subnet_ip_cidr_range = "10.100.20.0/24"
+  create_subnet         = true
+  subnet_type           = "cloud"
+  subnet_network_zone   = "eu-central"
+  subnet_ip_cidr_ranges = ["10.100.20.0/24", "10.100.30.0/24"]
+
+  create_network_route = true
+  network_routes       = local.network_routes
 }
