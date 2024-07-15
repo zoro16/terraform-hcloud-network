@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1](https://github.com/zoro16/terraform-hcloud-network/compare/v1.1.0...v1.1.1) (2024-07-15)
+
+
+### Bug Fixes
+
+* replace toset with distinct ([40d6338](https://github.com/zoro16/terraform-hcloud-network/commit/40d6338a64bdb7698604aef6cb7caa86060a2038))
+
 ## [1.1.0](https://github.com/zoro16/terraform-hcloud-network/compare/v1.0.0...v1.1.0) (2024-07-15)
 
 
