@@ -49,12 +49,12 @@ output "subnet_id" {
 
 output "subnet_network_id" {
   description = "ID of the Network the subnet should be added to."
-  value       = join(",", toset([for v in hcloud_network_subnet.subnet : v.network_id]))
+  value       = join(",", distinct([for v in hcloud_network_subnet.subnet : v.network_id]))
 }
 
 output "subnet_type" {
   description = "Type of subnet e.g. `server`, `cloud` or `vswitch`."
-  value       = join(",", toset([for v in hcloud_network_subnet.subnet : v.type]))
+  value       = join(",", distinct([for v in hcloud_network_subnet.subnet : v.type]))
 }
 
 output "subnet_ip_cidr_range" {
@@ -64,13 +64,13 @@ output "subnet_ip_cidr_range" {
 
 output "subnet_network_zone" {
   description = "Name of the network zone e.g. eu-central, us-east, us-west."
-  value       = join(",", toset([for v in hcloud_network_subnet.subnet : v.network_zone]))
+  value       = join(",", distinct([for v in hcloud_network_subnet.subnet : v.network_zone]))
 }
 
 output "subnet_vswitch_id" {
   description = "ID of the vswitch, Required if type is `vswitch`"
   value = try(
-    join(",", toset([for v in hcloud_network_subnet.subnet : v.vswitch_id])),
+    join(",", distinct([for v in hcloud_network_subnet.subnet : v.vswitch_id])),
     ""
   )
 
