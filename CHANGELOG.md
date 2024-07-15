@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/zoro16/terraform-hcloud-network/compare/v1.0.0...v1.1.0) (2024-07-15)
+
+
+### Features
+
+* add new helper variable ([7646b3f](https://github.com/zoro16/terraform-hcloud-network/commit/7646b3fd6442caeb312c5e5c4211e1ef4d532f07))
+* change count to for_each ([7d1cdad](https://github.com/zoro16/terraform-hcloud-network/commit/7d1cdade4a013357f1de7e4a2c87a0772dbf4e82))
+* fix variables validation and change some types ([c497d2f](https://github.com/zoro16/terraform-hcloud-network/commit/c497d2f67a979cb507a21a1988dd1f47e0f7b5c4))
+
 ## 1.0.0 (2023-09-24)
 
 
