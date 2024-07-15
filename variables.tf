@@ -18,7 +18,7 @@ variable "network_name" {
 variable "network_ip_cidr_range" {
   description = "IP CIDR Range of the whole Network which must span all included subnets and route destinations. Must be one of the private ipv4 ranges of RFC1918."
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.0.0.0/8"
 }
 
 variable "network_labels" {
@@ -59,27 +59,27 @@ variable "subnet_network_id" {
 variable "subnet_type" {
   description = "Type of subnet e.g. `server`, `cloud` or `vswitch`."
   type        = string
-  default     = null
+  default     = ""
 
   validation {
-    condition     = contains(["cloud", "server", "vswitch"], var.subnet_type) || var.subnet_type == null
+    condition     = contains(["cloud", "server", "vswitch"], var.subnet_type) || var.subnet_type == ""
     error_message = "Subnet type must be one of these types `server`, `cloud` or `vswitch`."
   }
 }
 
-variable "subnet_ip_cidr_range" {
+variable "subnet_ip_cidr_ranges" {
   description = "Range to allocate IPs from. Must be a subnet of the ip_range of the Network and must not overlap with any other subnets or with any destinations in routes."
-  type        = string
-  default     = "10.0.0.0/24"
+  type        = list(string)
+  default     = ["10.0.0.0/24"]
 }
 
 variable "subnet_network_zone" {
   description = "Name of the network zone e.g. eu-central, us-east, us-west."
   type        = string
-  default     = null
+  default     = ""
 
   validation {
-    condition     = contains(["eu-central", "eu-east", "eu-west"], var.subnet_network_zone) || var.subnet_network_zone == null
+    condition     = contains(["eu-central", "eu-east", "eu-west"], var.subnet_network_zone) || var.subnet_network_zone == ""
     error_message = "There are only 3 Network Zones ['eu-central', 'eu-east', 'eu-west'] are avaiable. Please enter a valid subnet_network_zone."
   }
 }
@@ -114,11 +114,10 @@ variable "network_route_destination" {
   default     = null
 
   validation {
-    condition     = var.network_route_destination == null
-    error_message = "Can't set `network_route_destination` to empty string. Network Route Destination is required."
+    condition     = can(cidrhost(var.network_route_destination, 0)) && var.network_route_destination != "" || var.network_route_destination == null
+    error_message = "`network_route_destination` cannot be set to empty string or invalide cidr."
   }
 }
-
 
 variable "network_route_gateway" {
   description = "Gateway for the route. Cannot be the first ip of the networks ip_range and also cannot be 172.31.1.1 as this IP is being used as a gateway for the public network interface of servers."
@@ -126,7 +125,7 @@ variable "network_route_gateway" {
   default     = null
 
   validation {
-    condition     = var.network_route_gateway == "172.31.1.1" || var.network_route_gateway == null
+    condition     = can(regex("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",var.network_route_gateway)) && var.network_route_gateway != "172.31.1.1" || var.network_route_gateway == null
     error_message = "Gateway cannot be `172.31.1.1` as this IP is being used as a gateway for the public network interface of servers."
   }
 }
