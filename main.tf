@@ -19,12 +19,12 @@ resource "hcloud_network" "network" {
 ################################################
 
 resource "hcloud_network_subnet" "subnet" {
-  count = var.create_subnet ? 1 : 0
+  for_each = var.create_subnet ? toset(var.subnet_ip_cidr_ranges) : []
 
-  network_id   = var.subnet_network_id
+  network_id   = hcloud_network.network[0].id
   type         = var.subnet_type
   network_zone = var.subnet_network_zone
-  ip_range     = var.subnet_ip_cidr_range
+  ip_range     = each.key
 }
 
 ################################################
@@ -33,9 +33,9 @@ resource "hcloud_network_subnet" "subnet" {
 ################################################
 
 resource "hcloud_network_route" "private_net" {
-  count = var.create_network_route ? 1 : 0
+  for_each = var.create_network_route ? var.network_routes : {}
 
-  network_id  = var.network_route_network_id
-  destination = var.network_route_destination
-  gateway     = var.network_route_gateway
+  network_id  = hcloud_network.network[0].id
+  destination = each.key
+  gateway     = each.value
 }
