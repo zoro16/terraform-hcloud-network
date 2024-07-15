@@ -42,32 +42,37 @@ output "network_expose_routes_to_vswitch" {
 
 output "subnet_id" {
   description = "ID of the Network subnet."
-  value       = try(hcloud_network_subnet.subnet[0].id, hcloud_network_subnet.subnet[*].id)
+  value       = toset([
+    for v in hcloud_network_subnet.subnet : v.id
+  ])
 }
 
 output "subnet_network_id" {
   description = "ID of the Network the subnet should be added to."
-  value       = try(hcloud_network_subnet.subnet[0].network_id, hcloud_network_subnet.subnet[*].network_id)
+  value       = join(",", toset([for v in hcloud_network_subnet.subnet : v.network_id]))
 }
 
 output "subnet_type" {
   description = "Type of subnet e.g. `server`, `cloud` or `vswitch`."
-  value       = try(hcloud_network_subnet.subnet[0].type, hcloud_network_subnet.subnet[*].type)
+  value       = join(",", toset([for v in hcloud_network_subnet.subnet : v.type]))
 }
 
 output "subnet_ip_cidr_range" {
   description = "Range to allocate IPs from. Must be a subnet of the ip_range of the Network and must not overlap with any other subnets or with any destinations in routes."
-  value       = try(hcloud_network_subnet.subnet[0].ip_range, hcloud_network_subnet.subnet[*].ip_range)
+  value       = [for v in hcloud_network_subnet.subnet : v.ip_range]
 }
 
 output "subnet_network_zone" {
   description = "Name of the network zone e.g. eu-central, us-east, us-west."
-  value       = try(hcloud_network_subnet.subnet[0].network_zone, hcloud_network_subnet.subnet[*].network_zone)
+  value       = join(",", toset([for v in hcloud_network_subnet.subnet : v.network_zone]))
 }
 
 output "subnet_vswitch_id" {
   description = "ID of the vswitch, Required if type is `vswitch`"
-  value       = try(hcloud_network_subnet.subnet[0].vswitch_id, hcloud_network_subnet.subnet[*].vswitch_id)
+  value       = try(
+    join(",", toset([for v in hcloud_network_subnet.subnet : v.vswitch_id])),
+    ""
+    )
 
   precondition {
     condition     = (var.subnet_type == "vswitch" && var.subnet_vswitch_id == null) ? false : true
@@ -84,21 +89,20 @@ output "subnet_vswitch_id" {
 
 output "network_route_id" {
   description = "ID of the Network the route should be added to."
-  value       = try(hcloud_network_route.private_net[0].id, hcloud_network_route.private_net[*].id)
+  value       = [for v in hcloud_network_route.private_net : v.id]
 }
 
 output "network_route_network_id" {
   description = "ID of the Network the route should be added to."
-  value       = try(hcloud_network_route.private_net[0].network_id, hcloud_network_route.private_net[*].network_id)
+  value       = join(",", [for v in hcloud_network_route.private_net : v.network_id])
 }
 
 output "network_route_destination" {
   description = "Destination network or host of this route. Must be a subnet of the ip_range of the Network. Must not overlap with an existing ip_range in any subnets or with any destinations in other routes or with the first ip of the networks ip_range or with 172.31.1.1."
-  value       = try(hcloud_network_route.private_net[0].destination, hcloud_network_route.private_net[*].destination)
+  value       = [for v in hcloud_network_route.private_net : v.destination]
 }
-
 
 output "network_route_gateway" {
   description = "Gateway for the route. Cannot be the first ip of the networks ip_range and also cannot be 172.31.1.1 as this IP is being used as a gateway for the public network interface of servers."
-  value       = try(hcloud_network_route.private_net[0].gateway, hcloud_network_route.private_net[*].gateway)
+  value       = [for v in hcloud_network_route.private_net : v.gateway]
 }
