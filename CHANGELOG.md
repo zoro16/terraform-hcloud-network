@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2](https://github.com/zoro16/terraform-hcloud-network/compare/v1.1.1...v1.1.2) (2024-07-22)
+
+
+### Bug Fixes
+
+* network zone list typos ([e1fdd0c](https://github.com/zoro16/terraform-hcloud-network/commit/e1fdd0c755ff2803ce9228b5d1f7f6470c6adf66))
+
 ## [1.1.1](https://github.com/zoro16/terraform-hcloud-network/compare/v1.1.0...v1.1.1) (2024-07-15)
 
 
