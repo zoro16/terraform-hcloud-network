@@ -79,7 +79,7 @@ variable "subnet_network_zone" {
   default     = ""
 
   validation {
-    condition     = contains(["eu-central", "eu-east", "eu-west"], var.subnet_network_zone) || var.subnet_network_zone == ""
+    condition     = contains(["eu-central", "us-east", "us-west"], var.subnet_network_zone) || var.subnet_network_zone == ""
     error_message = "There are only 3 Network Zones ['eu-central', 'eu-east', 'eu-west'] are avaiable. Please enter a valid subnet_network_zone."
   }
 }
